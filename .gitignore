@@ -1,0 +1,6 @@
+# * is used as a wildcard match
+# / is used to ignore pathnames relative to the .gitignore file
+# # is used to add comments to a .gitignore file
+
+# ignore Keras models
+*.keras
