@@ -8,10 +8,10 @@ import pandas as pd
 # print(os.listdir('./04_Data/test_data'))
 # brain_vol = nib.load('../04_Data/test_data/fMRI_post.nii')
 
-file_path = "X:/MasterThesis_Reto/Denoised_Data_6mm"
+file_path = "../data/Denoised_Data_6mm"
 
 # fMRI file
-path_content = os.listdir(os.path.join(file_path))
+path_content = os.listdir(file_path)
 brain_vol = nib.load(os.path.join(file_path, path_content[-1]))
 
 # # ICA data
