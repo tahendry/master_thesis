@@ -3,12 +3,11 @@ check if GPU is available
 """
 # %% Import libraries
 import tensorflow as tf
-
-# from tensorflow.keras.datasets import mnist
-from tensorflow.keras.datasets import imdb
-import numpy as np
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.keras.datasets import imdb
+from tensorflow.python.platform import build_info as tf_build_info
+import numpy as np
 import matplotlib.pyplot as plt
 import time
 
@@ -18,6 +17,8 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices("
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices("CPU")))
 print("Num TPUs Available: ", len(tf.config.experimental.list_physical_devices("TPU")))
 
+print(f"Your cuDNN version is: {tf_build_info.build_info['cudnn_version']}")
+print(f"Your CUDA version is: {tf_build_info.build_info['cuda_version']}")
 
 # %% Load the data
 
