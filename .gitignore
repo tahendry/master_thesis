@@ -4,3 +4,8 @@
 
 # ignore Keras models
 *.keras
+
+# ignore all folders starting with tpot
+tpot*/
+h2o*/
+pycaret*/
