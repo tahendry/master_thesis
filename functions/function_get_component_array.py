@@ -8,7 +8,7 @@ import numpy as np
 import nibabel as nib
 
 
-def get_component_array(components):
+def get_component_array(components, print_info=False):
     """
     Returns an arrays with the stacked components of the MVPA data.
 
@@ -22,36 +22,44 @@ def get_component_array(components):
     path_content = os.listdir(os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data"))
 
     components = sorted(components)
-    inpt_diff_list = []
+    comp_diff_list = []
 
     for component in components:
-        diff = []
-        # make two lists with pre (Condition002) and post (Condition003) data of first component
+        sample_diff_list = []
+        # make two lists with pre (Condition002) and post (Condition003) data 
+        # of component in loop
         pre = sorted([x for x in path_content 
                             if f"Component00{component}" in x 
                             and "Condition002" in x])
         post = sorted([x for x in path_content 
                             if f"Component00{component}" in x 
                             and "Condition003" in x])
+        
+        if print_info:
+            print(f"there are {len(pre)} pre and {len(post)} post samples for component {component}")
 
+        # loop over pre and post samples and calculate difference
         for pre, post in zip(pre, post):
-            pre_vol = nib.load(os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data", pre))
-            post_vol = nib.load(os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data", post))
+            pre_vol = nib.load(
+                os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data", pre)
+            )
+            post_vol = nib.load(
+                os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data", post)
+            )
             pre_vol_data = pre_vol.get_fdata()
             post_vol_data = post_vol.get_fdata()
-            diff_vol_data = post_vol_data - pre_vol_data
-            diff.append(diff_vol_data)
+            diff_vol_data = post_vol_data - pre_vol_data  # type = array
+            sample_diff_list.append(diff_vol_data)
 
-        inpt_diff_list.append(diff)
+        comp_diff_list.append(sample_diff_list)
 
-    # check the type of the data
-    print(f"{type(diff[0])=}")
+    # this stacks the two lists on top of each other
+    # resulting in [component, sample, x, y, z]
+    inpt_diff_stacked = np.stack(comp_diff_list, axis=0)
 
-    # stack the data to later use it as input for the CNN
-    # note: the first dimension is the number of samples
-    print(f"shape of one list element before stacking: {diff[0].shape=}")
-    inpt_diff = np.stack(diff, axis=0)
+    if print_info:
+        print(f"type of single volume array {type(diff_vol_data)}")
+        print(f"shape of single volume array {diff_vol_data.shape}")
+        print(f"shape of stacked array {inpt_diff_stacked.shape}")
 
-    print(f"{inpt_diff.shape=}")
-
-    return np.stack(inpt_diff_list, axis=0)
+    return inpt_diff_stacked

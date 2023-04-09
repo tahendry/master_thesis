@@ -5,13 +5,10 @@ Date: 2023-04-08
 This is gathered code from histology_analysis_on_MVPA.ipynb
 """
 
-import os
 import numpy as np
 import pandas as pd
-import nibabel as nib
-from function_get_label_df import get_label_df
 
-def get_best_features(array, df_label, number_of_features):
+def get_best_features(array, df_label, number_of_features, feature_list_values_=False):
     """
     Returns an array with the best features of the MVPA data.
 
@@ -23,12 +20,8 @@ def get_best_features(array, df_label, number_of_features):
         The number of features to be returned.
     """
 
-    # print the array shape before flattening
-    print(f"shape of array before flattening: {array.shape}")
-
     # flatten the array into a 2d array (keep the sample dimension)
     array_2d = array.reshape(array.shape[0], -1)
-    print(f"shape of array_2d: {array_2d.shape}")
 
     # create a dataframe from the 2d array
     df_small = (pd.DataFrame(array_2d))
@@ -57,4 +50,10 @@ def get_best_features(array, df_label, number_of_features):
 
     # create a list with the top_percent biggest differences
     feature_list = [x[0] for x in cum_diff_list[:int(len(cum_diff_list)*top_percent)]]
-    print(f"{len(feature_list)} features selected")
+    feature_list_values = [x[1] for x in cum_diff_list[:int(len(cum_diff_list)*top_percent)]]
+
+
+    if feature_list_values_:
+        return feature_list, feature_list_values
+    else:
+        return feature_list
