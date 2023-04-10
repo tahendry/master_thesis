@@ -22,7 +22,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     Parameters
     ----------
     sample_array_4d : numpy array
-        DESCRIPTION.
+        4d array with [sample, x, y, z].
     df_label : pandas dataframe
         df_label with ground truth in column "Cond".  
     feature_list : list
@@ -43,13 +43,13 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     cv_stratified = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
     # reshape 4d array to dataframe
-    sample_array_2d = pd.DataFrame(
+    sample_df = pd.DataFrame(
         sample_array_4d.reshape(sample_array_4d.shape[0], -1)
         ).iloc[:, feature_list]
 
     # split data into train and test
     x_train, x_test, y_train, y_test = train_test_split(
-        sample_array_2d, 
+        sample_df, 
         df_label["Cond"], 
         test_size=0.2, 
         random_state=42,
@@ -57,7 +57,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     )
 
     def define_tpot_model(
-            nbr_generations=100, nbr_population_size=100, max_time=120
+        nbr_generations=100, nbr_population_size=100, max_time=120
     ):
 
         tpot_model = TPOTClassifier(
@@ -71,7 +71,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
             max_eval_time_mins=10,  # default 5
             random_state=1,  # seed
             memory=False,  # avoid fitting same model
-            verbosity=1,  # 0 = minimal info, 3 = max info
+            verbosity=2,  # 0 = minimal info, 3 = max info
             # periodic_checkpoint_folder=f"./tpot_folder_reduced_topF",
             # log_file="./tpot_folder/tpot_log",
         )
@@ -80,7 +80,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     tpot = define_tpot_model()
 
     # Fit the TPOT classifier on the training set
-    print(f"Fitting tpot model on {len(feature_list)} features on component {component_number}...")
+    print(f"Fitting tpot model on {len(feature_list)} features on component {component}...")
     tpot.fit(x_train, y_train)
 
     # Access the best model (pipeline)
