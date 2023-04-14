@@ -19,7 +19,7 @@ def get_component_array(components, print_info=False):
 
     # read MVPA data
     data_path = "../data/"
-    path_content = os.listdir(os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data"))
+    path_content = os.listdir(os.path.join(data_path, "Denoised_MVPA_8mm"))
 
     components = sorted(components)
     comp_diff_list = []
@@ -30,10 +30,10 @@ def get_component_array(components, print_info=False):
         # of component in loop
         pre = sorted([x for x in path_content 
                             if f"Component00{component}" in x 
-                            and "Condition002" in x])
+                            and "Condition001" in x])
         post = sorted([x for x in path_content 
                             if f"Component00{component}" in x 
-                            and "Condition003" in x])
+                            and "Condition002" in x])
         
         if print_info:
             print(f"there are {len(pre)} pre and {len(post)} post samples for component {component}")
@@ -41,10 +41,10 @@ def get_component_array(components, print_info=False):
         # loop over pre and post samples and calculate difference
         for pre, post in zip(pre, post):
             pre_vol = nib.load(
-                os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data", pre)
+                os.path.join(data_path, "Denoised_MVPA_8mm", pre)
             )
             post_vol = nib.load(
-                os.path.join(data_path, "Denoised_Data_6mm", "MVPA_data", post)
+                os.path.join(data_path, "Denoised_MVPA_8mm", post)
             )
             pre_vol_data = pre_vol.get_fdata()
             post_vol_data = post_vol.get_fdata()
