@@ -1,10 +1,17 @@
 import numpy as np
 import pandas as pd
 import datetime
+import os
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score, f1_score, precision_score
-from pycaret.classification import setup, compare_models, tune_model, finalize_model, predict_model
+from pycaret.classification import (
+    setup, compare_models, tune_model, save_model,
+    predict_model, get_metrics, pull, evaluate_model)
 
+os.environ['PYDEVD_WARN_EVALUATION_TIMEOUT'] = '10.0'
+os.environ['PYDEVD_UNBLOCK_THREADS_TIMEOUT'] = '5.0'
 
 def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube):
     """
@@ -30,6 +37,9 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
 
     """
 
+    # Define the cross-validation strategy
+    cv_stratified = StratifiedKFold(n_splits=9, shuffle=True, random_state=42)
+
     # reshape 4d array to dataframe
     sample_df = pd.DataFrame(
         sample_array_4d.reshape(sample_array_4d.shape[0], -1)
@@ -46,56 +56,52 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
         stratify=data["Cond"]
     )
 
-
     # Setting up the pycaret environment
     exp = setup(
         data = train_data,  # training data
         target = "Cond",  # target variable
         test_data = test_data,  # hold out data for testing
         keep_features = list(data.columns[:-1]),  # keep all features (cols)
-        data_split_stratify = True,  # stratifistratifiedkfolded split
         normalize = True,  # normalize data
         normalize_method = "zscore",  #  z = (x - u) / s
-        fold_strategy = "stratifiedkfold",
-        fold = 5,  # number of folds for CV
-        fold_shuffle = True,  # shuffle of CV
+        fold_strategy = cv_stratified,  # predefined CV object
         n_jobs = -1,  # use all processors
-        use_gpu = True,  # use GPU for some models if available
+        # use_gpu = True,  # use GPU for some models if available
         session_id = 1,  # random state
         verbose = True,  # print information grid
     )
 
     # Compare and select the best model
     best_model = compare_models()
-    metrics_best_model = pull()
-
     # Tune the best model
-    tuned_model = tune_model(best_model)
-    metrics_tuned_model = pull()
+    tuned_model = tune_model(best_model, optimize="Accuracy", n_iter = 50)
 
-    # Finalize the model
-    final_model = finalize_model(tuned_model)
+    # get metrics of the tuned model
+    metrics_tuned_model = pull(tuned_model)
 
-    # Perform cross-validation on the training set
-    cv_scores = cross_val_score(final_model, 
-                                X=train_data.drop("Cond", axis=1), 
-                                y=train_data["Cond"],
-                                cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=42),
-                                n_jobs=-1, 
-                                error_score='raise')
-    cv_mean_accuracy = np.mean(cv_scores)
-    cv_std = np.std(cv_scores)
+    # Save best model
+    id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    save_model(tuned_model, f"pycaret_best_models/pycaret_{id}")
+
+    # get cross validation results
+    cv_mean_accuracy = metrics_tuned_model.loc["Mean", "Accuracy"]
+    cv_std = metrics_tuned_model.loc["Std", "Accuracy"]
 
     # Make predictions on the test set
-    predictions = predict_model(final_model, data=test_data)
+    predictions = predict_model(tuned_model)  # with hold out data (test_data)
 
     # Calculate the accuracy and F1 score on the test set
-    test_accuracy = accuracy_score(test_data["Cond"], predictions["Cond"])
-    test_f1_score = f1_score(test_data["Cond"], predictions["Cond"], average="weighted")
-    test_precision_score = precision_score(test_data["Cond"], predictions["Cond"], average="weighted")
+    test_accuracy = accuracy_score(
+        test_data["Cond"], predictions["prediction_label"]
+    )
+    test_f1_score = f1_score(
+        test_data["Cond"], predictions["prediction_label"], average="weighted"
+    )
+    test_precision_score = precision_score(
+        test_data["Cond"], predictions["prediction_label"], average="weighted"
+    )
 
     # Create a DataFrame to store the results
-    id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     results = pd.DataFrame({
         "id": [f"pycaret_{id}"],
         "component": [component],
