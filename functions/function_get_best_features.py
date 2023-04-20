@@ -7,17 +7,29 @@ This is gathered code from histology_analysis_on_MVPA.ipynb
 
 import numpy as np
 import pandas as pd
+import tqdm
 
-def get_best_features(array, df_label, number_of_features, feature_list_values_=False):
+def get_best_features_sorted(array, df_label, feature_list_values_=False):
     """
-    Returns an array with the best features of the MVPA data.
+    Returns an array with all the features sorted according to its relevance.
 
     Parameters
     ----------
     array : 4D-array [samples, x, y, z]
         The array with the MVPA data.
+    df_label : df
+        The dataframe with Ground Truth.
     number_of_features : int
         The number of features to be returned.
+
+    Return
+    ------
+    feature_list : list
+        List with all feature columns sorted according their relevance. 
+    feature_list_values : list
+        only returned when feature_list_values_=True. 
+        List with all feature values sorted according their relevance.
+        They match with the feature list. 
     """
 
     # flatten the array into a 2d array (keep the sample dimension)
@@ -32,8 +44,9 @@ def get_best_features(array, df_label, number_of_features, feature_list_values_=
     
     # calculate the difference between the two cumulative histograms including 
     # a resampling (done with the range argument) so that the two histograms have the same bins
+    print("Calculation for list of best features ...")
     cum_diff_dict = {}
-    for col in df_small.columns[:-1]:  # -1 because the last column is the ground truth
+    for col in tqdm.tqdm(df_small.columns[:-1]):  # -1 because the last column is the ground truth
         cum_diff = np.abs(np.cumsum(np.histogram(df_small.loc[df_label["Cond"]==1 , col],
                                                     bins=100, density=True,
                                                     range=(min_value, max_value)  # resample to have same binning
@@ -43,14 +56,13 @@ def get_best_features(array, df_label, number_of_features, feature_list_values_=
                                                     range=(min_value, max_value)  # resample to have same binning
                                                     )[0]))
         cum_diff_dict[col] = cum_diff.sum()
-        
+    
+    # sort the list of tuples according to the most relevant feature (biggest cumsum)
     cum_diff_list = sorted(cum_diff_dict.items(), key=lambda x:x[1], reverse=True)  # creates a list of tuples
 
-    top_percent = number_of_features / len(array_2d[1])
-
-    # create a list with the top_percent biggest differences
-    feature_list = [x[0] for x in cum_diff_list[:int(len(cum_diff_list)*top_percent)]]
-    feature_list_values = [x[1] for x in cum_diff_list[:int(len(cum_diff_list)*top_percent)]]
+    # create a list with the index and values of the features
+    feature_list = [x[0] for x in cum_diff_list]
+    feature_list_values = [x[1] for x in cum_diff_list]
 
 
     if feature_list_values_:
