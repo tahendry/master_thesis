@@ -40,7 +40,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     """
     
     # Define the cross-validation strategy
-    cv_stratified = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    cv_stratified = StratifiedKFold(n_splits=9, shuffle=True, random_state=42)
 
     # reshape 4d array to dataframe
     sample_df = pd.DataFrame(
@@ -64,7 +64,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
             generations=nbr_generations,  # number of iterations for optimization
             population_size=nbr_population_size,  # default 100
             max_time_mins=max_time,
-            early_stop=10,
+            early_stop=10,  # number of iterations without improvement before stopping
             scoring="accuracy",
             cv=cv_stratified,  # cross validation fold (default)
             n_jobs=-1, # nbr. of cores used (-1 = all)
@@ -91,7 +91,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     tpot.export(f"./tpot_best_models/tpot_pipeline_{id}.py")
 
     # Perform cross-validation on the training set
-    cv_scores = cross_val_score(best_model, x_train, y_train, cv=5)
+    cv_scores = cross_val_score(best_model, x_train, y_train, cv=cv_stratified)
     cv_mean_accuracy = np.mean(cv_scores)
     cv_std = np.std(cv_scores)
 
