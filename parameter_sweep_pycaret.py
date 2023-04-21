@@ -17,9 +17,9 @@ from functions.function_run_pycaret import run_pycaret
 ##############################################
 
 # parameters to define
-list_of_components = [1]
-reshape_cube_list = [5]
-number_of_feature_list = np.arange(10, 200, 25, dtype=int)
+list_of_components = [1, 1]
+resample_cube_list = np.arange(1, 10, 1)
+number_of_feature_list = np.arange(10, 101, 10, dtype=int)
 
 ##############################################
 
@@ -38,7 +38,7 @@ except:
     result_df = pd.DataFrame()
 
 # loop through different cube sizes
-for reshape_cube in reshape_cube_list:
+for reshape_cube in resample_cube_list:
 
     # loop through the components
     for indx, component in enumerate(list_of_components):

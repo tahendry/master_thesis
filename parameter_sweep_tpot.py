@@ -17,10 +17,10 @@ from functions.function_run_tpot import run_tpot
 ##############################################
 
 # parameters to define
-list_of_components = [1, 1, 1]
-reshape_cube_list = np.arange(1, 10, 1)
-number_of_feature_list = np.arange(10, 100, 10, dtype=int)
-# number_of_feature_list = [110]
+list_of_components = [1, 1]
+resample_cube_list = np.arange(2, 10, 1)
+number_of_feature_list = np.arange(10, 101, 10, dtype=int)
+# number_of_feature_list = [100, 110]
 
 
 ##############################################
@@ -40,7 +40,7 @@ except:
     result_df = pd.DataFrame()
 
 # loop through different cube sizes
-for reshape_cube in reshape_cube_list:
+for reshape_cube in resample_cube_list:
 
     # loop through the components
     for indx, component in enumerate(list_of_components):
