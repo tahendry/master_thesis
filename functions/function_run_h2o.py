@@ -39,31 +39,6 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, reshape_cube):
         a dataframe with the results of the best model of the H2O AutoML run
 
     """
-
-    def cross_val_metrics(model, X, y, cv=5):
-        skf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=42)
-        accuracy_scores = []
-        
-        for train_index, val_index in skf.split(X, y):
-            X_train_cv, X_val_cv = X.iloc[train_index], X.iloc[val_index]
-            y_train_cv, y_val_cv = y.iloc[train_index], y.iloc[val_index]
-
-            X_train_cv_h2o = h2o.H2OFrame(pd.concat([X_train_cv, y_train_cv], axis=1))
-            X_val_cv_h2o = h2o.H2OFrame(pd.concat([X_val_cv, y_val_cv], axis=1))
-
-            X_train_cv_h2o[y_label] = X_train_cv_h2o[y_label].asfactor()
-            X_val_cv_h2o[y_label] = X_val_cv_h2o[y_label].asfactor()
-
-            val_pred = model.predict(X_val_cv_h2o)
-            y_val_pred = val_pred.as_data_frame().values.argmax(axis=1)
-            
-            accuracy = accuracy_score(y_val_cv, y_val_pred)
-            accuracy_scores.append(accuracy)
-        
-        mean_accuracy = np.mean(accuracy_scores)
-        std_accuracy = np.std(accuracy_scores)
-        
-        return mean_accuracy, std_accuracy
     
     h2o.init()
 
@@ -101,12 +76,16 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, reshape_cube):
     h2o_model = H2OAutoML(
         max_runtime_secs=7200, 
         max_models=100, 
-        seed=1,
-        balance_classes=True,
+        nfolds=9,
+        balance_classes=True,  # stratified sampling
+        seed=1,  # reproducibility
+        stopping_metric="auc",
         stopping_rounds=10,  # stop training if the score doesn't improve for 10 rounds
         verbosity="info",
+        exclude_algos=["DeepLearning"],
     )
 
+    print(f"Fitting tpot model on {len(feature_list)} features on component {component}...")
     h2o_model.train(x=x_features, y=y_label, training_frame=x_train_h2o)
 
     best_model = h2o_model.leader
@@ -119,19 +98,16 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, reshape_cube):
         force=True,  # overwrite existing model
     )
 
-    ### Calculate cross-validated metrics from training data
     # cv-accuracy and cv-standard deviation from best model
-    cv_mean_accuracy, cv_std = cross_val_metrics(best_model, x_train, y_train)
+    cv_metrics = best_model.cross_validation_metrics_summary().as_data_frame()
+    cv_mean_accuracy = cv_metrics.loc[cv_metrics[""]=="accuracy", "mean"].values[0]
+    cv_std = cv_metrics.loc[cv_metrics[""]=="accuracy", "sd"].values[0]
 
     ### calculate test metrics
-    # Make predictions on the test set
-    test_pred = best_model.predict(x_test_h2o)
-    y_test_pred = test_pred.as_data_frame().values.argmax(axis=1)
-
-    # Calculate the accuracy and F1 score on the test set
-    test_accuracy = accuracy_score(y_test, y_test_pred)
-    test_f1_score = f1_score(y_test, y_test_pred, average="weighted")
-    test_precision_score = precision_score(y_test, y_test_pred, average="weighted")
+    test_pred = best_model.predict(x_test_h2o).as_data_frame().loc[:,"predict"]
+    test_accuracy = accuracy_score(y_test, test_pred)
+    test_f1_score = f1_score(y_test, test_pred, average="weighted")
+    test_precision_score = precision_score(y_test, test_pred, average="weighted")
 
     # Create a DataFrame to store the results
     results = pd.DataFrame({
