@@ -66,7 +66,6 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
         normalize_method = "zscore",  #  z = (x - u) / s
         fold_strategy = cv_stratified,  # predefined CV object
         n_jobs = -1,  # use all processors
-        # use_gpu = True,  # use GPU for some models if available
         session_id = 1,  # random state
         verbose = True,  # print information grid
     )
@@ -74,7 +73,8 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
     # Compare and select the best model
     best_model = compare_models()
     # Tune the best model
-    tuned_model = tune_model(best_model, optimize="Accuracy", n_iter = 50)
+    tuned_model, tuner = tune_model(best_model, optimize="Accuracy", 
+                                    n_iter = 100, return_tuner=True)
 
     # get metrics of the tuned model
     metrics_tuned_model = pull(tuned_model)
@@ -82,6 +82,11 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
     # Save best model
     id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     save_model(tuned_model, f"pycaret_best_models/pycaret_{id}")
+    """
+    sometimes, the model tuned, is still not better than the best model
+    in this case, the best model is saved, respectively the tuned model
+    results in the same model
+    """
 
     # get cross validation results
     cv_mean_accuracy = metrics_tuned_model.loc["Mean", "Accuracy"]
@@ -105,13 +110,13 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
     results = pd.DataFrame({
         "id": [f"pycaret_{id}"],
         "component": [component],
-        "reshape_cube": [reshape_cube],
-        "number of features": [len(feature_list)],
-        "CV Accuracy (Training)": [cv_mean_accuracy],
-        "CV Std (Training)": [cv_std],
-        "Accuracy (Test)": [test_accuracy],
-        "F1 Score (Test)": [test_f1_score],
-        "Precision Score (Test)": [test_precision_score],
+        "resample_cube": [reshape_cube],
+        "number_of_features": [len(feature_list)],
+        "CV_Accuracy_(Training)": [cv_mean_accuracy],
+        "CV_Std_(Training)": [cv_std],
+        "Accuracy_(Test)": [test_accuracy],
+        "F1_Score_(Test)": [test_f1_score],
+        "Precision_Score_(Test)": [test_precision_score],
     })
 
     return results

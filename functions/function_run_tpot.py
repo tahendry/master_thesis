@@ -107,13 +107,13 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     results = pd.DataFrame({
         "id": [f"tpot_{id}"],
         "component": [component],
-        "reshape_cube": [reshape_cube],
-        "number of features": [len(feature_list)],
-        "CV Accuracy (Training)": [cv_mean_accuracy],
-        "CV Std (Training)": [cv_std],
-        "Accuracy (Test)": [test_accuracy],
-        "F1 Score (Test)": [test_f1_score],
-        "Precision Score (Test)": [test_precision_score],
+        "resample_cube": [reshape_cube],
+        "number_of_features": [len(feature_list)],
+        "CV_Accuracy_(Training)": [cv_mean_accuracy],
+        "CV_Std_(Training)": [cv_std],
+        "Accuracy_(Test)": [test_accuracy],
+        "F1_Score_(Test)": [test_f1_score],
+        "Precision_Score_(Test)": [test_precision_score],
     })
     
     return results
