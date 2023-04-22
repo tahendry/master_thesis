@@ -91,6 +91,11 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     tpot.export(f"./tpot_best_models/tpot_pipeline_{id}.py")
 
     # Perform cross-validation on the training set
+    """
+    it is not possible with tpot to extract the cross-validation scores directly
+    it would be possible to extract the cross validation accuracy, but not the std
+    this is why it is done manually. The results seem to be the same after comparing them.
+    """
     cv_scores = cross_val_score(best_model, x_train, y_train, cv=cv_stratified)
     cv_mean_accuracy = np.mean(cv_scores)
     cv_std = np.std(cv_scores)
@@ -109,11 +114,11 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
         "component": [component],
         "resample_cube": [reshape_cube],
         "number_of_features": [len(feature_list)],
-        "CV_Accuracy_(Training)": [cv_mean_accuracy],
-        "CV_Std_(Training)": [cv_std],
-        "Accuracy_(Test)": [test_accuracy],
-        "F1_Score_(Test)": [test_f1_score],
-        "Precision_Score_(Test)": [test_precision_score],
+        "CV_Accuracy_(Training)": [np.round(cv_mean_accuracy, 4)],
+        "CV_Std_(Training)": [np.round(cv_std, 4)],
+        "Accuracy_(Test)": [np.round(test_accuracy, 4)],
+        "F1_Score_(Test)": [np.round(test_f1_score, 4)],
+        "Precision_Score_(Test)": [np.round(test_precision_score, 4)],
     })
     
     return results

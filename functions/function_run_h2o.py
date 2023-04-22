@@ -115,11 +115,11 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, reshape_cube):
         "component": [component],
         "resample_cube": [reshape_cube],
         "number_of_features": [len(feature_list)],
-        "CV_Accuracy_(Training)": [cv_mean_accuracy],
-        "CV_Std_(Training)": [cv_std],
-        "Accuracy_(Test)": [test_accuracy],
-        "F1_Score_(Test)": [test_f1_score],
-        "Precision_Score_(Test)": [test_precision_score],
+        "CV_Accuracy_(Training)": [np.round(cv_mean_accuracy, 4)],
+        "CV_Std_(Training)": [np.round(cv_std, 4)],
+        "Accuracy_(Test)": [np.round(test_accuracy, 4)],
+        "F1_Score_(Test)": [np.round(test_f1_score, 4)],
+        "Precision_Score_(Test)": [np.round(test_precision_score, 4)],
     })
 
     h2o.shutdown(prompt=False)
