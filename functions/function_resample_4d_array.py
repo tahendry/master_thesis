@@ -55,12 +55,6 @@ def resample_4d_array(big_array_4d, reshape_cube):
     volume_size = (reshape_cube, reshape_cube, reshape_cube)
 
     # call the function
-    # small_4d_array = np.array(
-    #     [reshape_3d_array(big_array_4d[i], volume_size) 
-    #         for i in range(big_array_4d.shape[0])]
-    # )
-
-    # call the function
     print("Resampling in progress...")
     small_4d_array = []
     for i in tqdm.tqdm(range(big_array_4d.shape[0])):

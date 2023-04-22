@@ -11,6 +11,7 @@ import nibabel as nib
 def get_component_array(components, print_info=False):
     """
     Returns an arrays with the stacked components of the MVPA data.
+    (component, samples, x, y, z)
 
     Parameters
     ----------
