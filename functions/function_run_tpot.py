@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, f1_score, precision_score
 
 
-def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
+def run_tpot(sample_array_4d, df_label, feature_list, component, resample_cube):
     """
     Run tpot on the input data.
 
@@ -29,7 +29,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
         a list of the features to be used (elements in flattened array)
     component : int
         The component number
-    reshape_cube : int
+    resample_cube : int
         the size of the cube to reshape the array 5 -> 5x5x5
     
     Returns
@@ -112,7 +112,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, reshape_cube):
     results = pd.DataFrame({
         "id": [f"tpot_{id}"],
         "component": [component],
-        "resample_cube": [reshape_cube],
+        "resample_cube": [resample_cube],
         "number_of_features": [len(feature_list)],
         "CV_Accuracy_(Training)": [np.round(cv_mean_accuracy, 4)],
         "CV_Std_(Training)": [np.round(cv_std, 4)],

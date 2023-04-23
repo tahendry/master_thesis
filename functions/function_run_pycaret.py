@@ -13,7 +13,7 @@ from pycaret.classification import (
 os.environ['PYDEVD_WARN_EVALUATION_TIMEOUT'] = '10.0'
 os.environ['PYDEVD_UNBLOCK_THREADS_TIMEOUT'] = '5.0'
 
-def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube):
+def run_pycaret(sample_array_4d, df_label, feature_list, component, resample_cube):
     """
     Run pycaret on the input data.
 
@@ -27,7 +27,7 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
         a list of the features to be used (elements in flattened array)
     component : int
         The component number
-    reshape_cube : int
+    resample_cube : int
         the size of the cube to reshape the array 5 -> 5x5x5
 
     Returns
@@ -110,7 +110,7 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, reshape_cube
     results = pd.DataFrame({
         "id": [f"pycaret_{id}"],
         "component": [component],
-        "resample_cube": [reshape_cube],
+        "resample_cube": [resample_cube],
         "number_of_features": [len(feature_list)],
         "CV_Accuracy_(Training)": [np.round(cv_mean_accuracy, 4)],
         "CV_Std_(Training)": [np.round(cv_std, 4)],
