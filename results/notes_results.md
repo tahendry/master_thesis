@@ -2,8 +2,7 @@
 
 In here are the results from the autoML tool saved. 
 
-The results ending with *...2xC1* are the ones where the same parameters were exactly run twice. This was to test the reproducibility of the autoML tools. \
-The files without this ending contain the same information. But for the analysis, the results are filtered for duplicates of the parameters and only the first occurrence is taken.
+The results ending with *...2xC1* are the ones where the same parameters were exactly run twice. This was to test the reproducibility of the autoML tools. NOTE: The results of the files *pycaret_results_df_2xC1.csv* and *tpot_results_df_2xC1.csv* might be wrong since I found an error in the code after running them. However, they still fulfill the purpose of testing the reproducibility. \
 
 The parameters for the reproducibility-check were the following:
 - list_of_components = [1, 1]
