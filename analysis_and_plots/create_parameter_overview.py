@@ -33,7 +33,7 @@ df_label = get_label_df()
 
 # load feature_list_df if it exists
 try:
-    feature_list_df = pd.read_csv("./results/feature_list_df.csv")
+    feature_list_df = pd.read_csv("./results/parameter_overview_df.csv")
 except:
     # get the MVPA data arrays
     component_array_5d = get_component_array(list_of_components)
@@ -75,7 +75,7 @@ except:
                 feature_list_df = pd.concat([feature_list_df, df_temp], axis=0, ignore_index=True)
 
     # save the feature_list_df
-    feature_list_df.to_csv("./results/feature_list_df.csv", index=False)
+    feature_list_df.to_csv("./results/parameter_overview_df.csv", index=False)
 
 feature_list_df
 
