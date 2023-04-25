@@ -6,7 +6,7 @@ Date: 2023-03-25
 import numpy as np
 import tqdm
 
-def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False):
+def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False, return_padded_array=False):
     """
     This code defines a function that resamples a 3D NumPy array 
     by taking the mean of non-overlapping volumes of 
@@ -91,7 +91,7 @@ def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False):
                   f"Effective small_3d_array_size: {small_3d_array.shape}",
                   sep="\n")
         
-        return small_3d_array
+        return small_3d_array, padding
     
     # Create a tuple with the volume size
     volume_size = (reshape_cube, reshape_cube, reshape_cube)
@@ -103,10 +103,12 @@ def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False):
         # only print the array sizes for the first array
         if i > 0:
             print_array_sizes = False
-        reshaped_array = resample_3d_array(big_array_4d[i], volume_size)
+        reshaped_array, padding_return = resample_3d_array(big_array_4d[i], volume_size)
         small_4d_array.append(reshaped_array)
 
     small_4d_array = np.array(small_4d_array)
     
-
-    return small_4d_array
+    if return_padded_array:
+        return small_4d_array, padding_return
+    else:
+        return small_4d_array
