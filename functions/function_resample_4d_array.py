@@ -8,10 +8,14 @@ import tqdm
 
 def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False, return_padded_array=False):
     """
-    This code defines a function that resamples a 3D NumPy array 
-    by taking the mean of non-overlapping volumes of 
-    a specified size. The input array is first padded to ensure that 
+    Resamples each 3d array for each sample (4th dimension) in a 4d array.
+    The resampling is done by taking the mean of non-overlapping volumes of
+    a specified size. The input array is first padded to ensure that
     it can be evenly divided into the smaller volumes.
+    
+    This function contains another function.
+    The function "resample_3d_array" inside this function is defined first.
+    It is used to resample a 3D array (x, y, z), or in other words a single sample.
     
     Parameters:
     ----------
@@ -25,11 +29,15 @@ def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False, retur
         If True, the size of the original array,
         the padding, and the size of the padded array
         will be printed.
+    return_padded_array : bool
+        If True, the padded array will be returned.
     
     Returns:
     -------
     small_4d_array : numpy array
         The smaller array which is the result of the reshaping.
+    padding_return : tuple, optional
+        The padding which was used to pad the array.
 
     """
 
@@ -93,6 +101,9 @@ def resample_4d_array(big_array_4d, reshape_cube, print_array_sizes=False, retur
         
         return small_3d_array, padding
     
+
+    ### Start of the resample_4d_array function ###
+
     # Create a tuple with the volume size
     volume_size = (reshape_cube, reshape_cube, reshape_cube)
 

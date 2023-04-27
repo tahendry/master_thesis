@@ -11,6 +11,8 @@ import tqdm
 
 def get_best_features_sorted(array, df_label, feature_list_values_=False):
     """
+    Does a (cumulative) histogram analysis to find the features/voxels 
+    which differ the most across the two classes (treatment / no treatment).
     Returns an array with all the features sorted according to its relevance.
 
     Parameters
@@ -18,16 +20,19 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False):
     array : 4D-array [samples, x, y, z]
         The array with the MVPA data.
     df_label : df
-        The dataframe with Ground Truth.
-    number_of_features : int
-        The number of features to be returned.
+        The dataframe with Ground Truth, column name "Cond".
+        value 1 = "treatment received", 
+        value 0 = "treatment not received"
+    feature_list_values_ : bool, optional
+        If True, the function returns a list with the 
+        values of the features, by default False. 
 
     Return
     ------
     feature_list : list
         List with all feature columns sorted according their relevance. 
-    feature_list_values : list
-        only returned when feature_list_values_=True. 
+    feature_list_values : list, optional
+        only returned when feature_list_values_ = True. 
         List with all feature values sorted according their relevance.
         They match with the feature list. 
     """

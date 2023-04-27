@@ -15,7 +15,17 @@ def get_component_array(components, print_info=False):
 
     Parameters
     ----------
-    component : list of components
+    components : list
+        list of components to be used
+    print_info : bool, optional
+        print info about the array, by default False
+
+    Returns
+    -------
+    inpt_diff_stacked : array
+        array with the stacked components of the MVPA data
+        (components, samples, x, y, z)
+
     """
 
     # read MVPA data
@@ -26,9 +36,13 @@ def get_component_array(components, print_info=False):
     comp_diff_list = []
 
     for component in components:
+        
         sample_diff_list = []
-        # make two lists with pre (Condition002) and post (Condition003) data 
-        # of component in loop
+        # make two lists with pre (Condition001) and post (Condition002) data 
+        # sort them to make sure they are in order
+        # example:  'BETA_Subject001_Condition001_Measure001_Component001.nii', 
+        #           'BETA_Subject002_Condition001_Measure001_Component001.nii',
+        #           'BETA_Subject003_Condition001_Measure001_Component001.nii', ...
         pre = sorted([x for x in path_content 
                             if f"Component00{component}" in x 
                             and "Condition001" in x])

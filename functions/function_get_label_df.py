@@ -10,7 +10,19 @@ import pandas as pd
 
 def get_label_df():
     """
-    Returns a dataframe with the labels data.
+    Read in the excel-file with the labels and return a dataframe 
+    with the labels.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    df_label : pandas dataframe
+        Dataframe with the labels.
+        Column with condition: "Cond"
+
     """
     # read in the excel-file with the labels
     data_path = "../data/"
