@@ -9,9 +9,9 @@ The data utilized for this analysis was provided by the University Hospital Zuri
 There are a total of 90 subjects, each with pre- and post-measurement data. The NIfTI files essentially represent volumetric (3D) data from the scans.
 
 ## Applied AutoML Tools:
-- TPOT
-- PyCaret
-- H2O
+- TPOT (http://epistasislab.github.io/tpot/)
+- PyCaret (https://pycaret.gitbook.io/docs/)
+- H2O (https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html)
 
 ## Explanation of scripts/code and folders
 Each folder has its own readme.md file which briefly describes the usage of each file in the folder. Here is a quick overview what the content of each folder is:
