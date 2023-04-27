@@ -39,8 +39,6 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube):
         a dataframe with the results of the best model of the H2O AutoML run
 
     """
-    
-    h2o.init()
 
     # reshape 4d array to dataframe
     sample_df = pd.DataFrame(
@@ -121,7 +119,5 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube):
         "F1_Score_(Test)": [np.round(test_f1_score, 4)],
         "Precision_Score_(Test)": [np.round(test_precision_score, 4)],
     })
-
-    h2o.shutdown(prompt=False)
     
     return results

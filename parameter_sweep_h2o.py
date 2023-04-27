@@ -6,6 +6,7 @@ Author: Reto Hendry
 
 import numpy as np
 import pandas as pd
+import h2o
 
 from functions.function_get_label_df import get_label_df
 from functions.function_get_component_array import get_component_array
@@ -17,9 +18,9 @@ from functions.function_run_h2o import run_h2o
 ##############################################
 
 # parameters to define
-list_of_components = [1, 1]
-resample_cube_list = np.arange(1, 10, 1)
-number_of_feature_list = np.arange(10, 101, 10, dtype=int)
+list_of_components = [1]
+resample_cube_list = np.arange(1, 16, 2, dtype=int)
+number_of_feature_list = np.arange(10, 211, 20, dtype=int)
 
 ##############################################
 
@@ -36,6 +37,15 @@ try:
     result_df = pd.read_csv("./results/h2o_results_df.csv")
 except:
     result_df = pd.DataFrame()
+
+# start h2o server
+h2o.init(
+    ip="localhost", 
+    port=54323,
+    nthreads=-1,
+    max_mem_size=128,  # 128 GB
+    min_mem_size=32,  # 32 GB
+)
 
 # loop through different cube sizes
 for reshape_cube in resample_cube_list:
@@ -65,6 +75,9 @@ for reshape_cube in resample_cube_list:
 
             # save the result_df to csv
             result_df.to_csv("./results/h2o_results_df.csv", index=False)
+
+# stop h2o server
+h2o.shutdown(prompt=False)
 
 # show the result_df
 result_df
