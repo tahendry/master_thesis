@@ -1,4 +1,4 @@
-id,component,reshape_cube,number_of_features,CV_Accuracy_(Training),CV_Std_(Training),Accuracy_(Test),F1_Score_(Test),Precision_Score_(Test)
+id,component,resample_cube,number_of_features,CV_Accuracy_(Training),CV_Std_(Training),Accuracy_(Test),F1_Score_(Test),Precision_Score_(Test)
 pycaret_20230421_003411,1,1,10,0.6111,0.1496,0.5555555555555556,0.5555555555555556,0.5555555555555556
 pycaret_20230421_003611,1,1,20,0.6667,0.1559,0.6111111111111112,0.6099071207430341,0.6124999999999999
 pycaret_20230421_004041,1,1,30,0.6806,0.1332,0.6111111111111112,0.5785953177257525,0.6607142857142857
