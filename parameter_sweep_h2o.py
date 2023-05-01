@@ -7,6 +7,7 @@ Author: Reto Hendry
 import numpy as np
 import pandas as pd
 import h2o
+import time
 
 from functions.function_get_label_df import get_label_df
 from functions.function_get_component_array import get_component_array
@@ -38,17 +39,19 @@ try:
 except:
     result_df = pd.DataFrame()
 
-# start h2o server
-h2o.init(
-    ip="localhost", 
-    port=54323,
-    nthreads=-1,
-    max_mem_size=128,  # 128 GB
-    min_mem_size=32,  # 32 GB
-)
-
 # loop through different cube sizes
 for reshape_cube in resample_cube_list:
+
+    # start h2o server
+    # It was noticed that if the server is not restarted from time to time,
+    # the training of the models becomes slower and slower.
+    h2o.init(
+        ip="localhost", 
+        port=54323,
+        nthreads=-1,
+        min_mem_size=64,  # 64 GB
+        max_mem_size=160,  # 160 GB
+    )
 
     # loop through the components
     for indx, component in enumerate(list_of_components):
@@ -76,8 +79,9 @@ for reshape_cube in resample_cube_list:
             # save the result_df to csv
             result_df.to_csv("./results/h2o_results_df.csv", index=False)
 
-# stop h2o server
-h2o.shutdown(prompt=False)
+    # stop h2o server
+    h2o.shutdown(prompt=False)
+    time.sleep(60)
 
 # show the result_df
 result_df
