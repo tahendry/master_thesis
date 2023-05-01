@@ -13,6 +13,9 @@ There are a total of 90 subjects, each with pre- and post-measurement data. The 
 - PyCaret (https://pycaret.gitbook.io/docs/)
 - H2O (https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html)
 
+## Hardware used
+A Linux Workstation with 8 cores and 256 GB of RAM was used for the entire thesis. Therefore problems might occur when trying to set up the environments on a Windows machine.
+
 ## Explanation of scripts/code and folders
 Each folder has its own readme.md file which briefly describes the usage of each file in the folder. Here is a quick overview what the content of each folder is:
 - **parameter_sweep_[autoML tool].py**: They are used to find the optimal and best pipeline to classify the data/subject. 
