@@ -10,8 +10,8 @@ import pandas as pd
 
 def get_label_df():
     """
-    Read in the excel-file with the labels and return a dataframe 
-    with the labels.
+    Read in the excel-file with the labels and 
+    return a dataframe with the labels.
 
     Parameters
     ----------
@@ -21,7 +21,8 @@ def get_label_df():
     -------
     df_label : pandas dataframe
         Dataframe with the labels.
-        Column with condition: "Cond"
+        Column with condition/label: "Cond"
+        Sham (placebo) = 0, Verum = 1
 
     """
     # read in the excel-file with the labels
