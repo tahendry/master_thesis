@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import tqdm
 
-def get_best_features_sorted(array, df_label, feature_list_values_=False):
+def get_best_features_sorted(array, df_label, feature_list_values_=False, proof_of_correctness_arg=False):
     """
     Does a (cumulative) histogram analysis to find the features/voxels 
     which differ the most across the two classes (treatment / no treatment).
@@ -18,7 +18,7 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False):
     Parameters
     ----------
     array : 4D-array [samples, x, y, z]
-        The array with the MVPA data.
+        The resampled array with the MVPA data.
     df_label : df
         The dataframe with Ground Truth, column name "Cond".
         value 1 = "treatment received", 
@@ -26,6 +26,9 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False):
     feature_list_values_ : bool, optional
         If True, the function returns a list with the 
         values of the features, by default False. 
+    proof_of_correctness_arg : bool, optional
+        This parameter is only set to true to test the entire pipeline,
+        by default False.
 
     Return
     ------
@@ -37,9 +40,19 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False):
         They match with the feature list. 
     """
 
+    if proof_of_correctness_arg:
+        # change the values of the array to zeros
+        array = np.zeros(array.shape)
+
+        # For the samples which received the treatment (df_label["Cond"] = 1):
+        # change the middle plane of every sample to 1
+        array[df_label["Cond"]==1, int(array.shape[1]/2), :, :] = 1
+        # set a volume of (5, 5, 5) of the lower corner of every sample to 1
+        array[df_label["Cond"]==1, 0:5, 0:5, 0:5] = 1
+
     # flatten the array into a 2d array (keep the sample dimension)
     array_2d = array.reshape(array.shape[0], -1)
-
+        
     # create a dataframe from the 2d array
     df_small = (pd.DataFrame(array_2d))
 

@@ -20,8 +20,15 @@ from functions.function_run_h2o import run_h2o
 
 # parameters to define
 list_of_components = [1]
-resample_cube_list = np.arange(1, 16, 2, dtype=int)
-number_of_feature_list = np.arange(10, 211, 20, dtype=int)
+resample_cube_list = [1, 2, 3, 4, 5]
+number_of_feature_list = [410, 430, 450]
+
+# this parameter is only set to true to test the entire pipeline
+proof_of_correctness = True
+if proof_of_correctness:
+    list_of_components = [1]
+    resample_cube_list = [5]
+    number_of_feature_list = [543]
 
 ##############################################
 
@@ -61,7 +68,7 @@ for reshape_cube in resample_cube_list:
 
         # get the sorted feature list
         best_feature_list = get_best_features_sorted(
-            sample_array_4d, df_label
+            sample_array_4d, df_label, proof_of_correctness_arg=proof_of_correctness
         )
 
         # loop through the number of features
@@ -69,6 +76,7 @@ for reshape_cube in resample_cube_list:
             
             # select desired number of features
             best_features = best_feature_list[:number_of_features]
+            print(best_features)
 
             # run h2o on the best features
             single_result_df = run_h2o(
