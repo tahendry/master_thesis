@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import tqdm
 
-def get_best_features_sorted(array, df_label, feature_list_values_=False, proof_of_correctness_arg=False):
+def get_best_features_sorted(array, df_label, feature_list_values_=False):
     """
     Does a (cumulative) histogram analysis to find the features/voxels 
     which differ the most across the two classes (treatment / no treatment).
@@ -26,9 +26,6 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False, proof_
     feature_list_values_ : bool, optional
         If True, the function returns a list with the 
         values of the features, by default False. 
-    proof_of_correctness_arg : bool, optional
-        This parameter is only set to true to test the entire pipeline,
-        by default False.
 
     Return
     ------
@@ -39,16 +36,6 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False, proof_
         List with all feature values sorted according their relevance.
         They match with the feature list. 
     """
-
-    if proof_of_correctness_arg:
-        # change the values of the array to zeros
-        array = np.zeros(array.shape)
-
-        # For the samples which received the treatment (df_label["Cond"] = 1):
-        # change the middle plane of every sample to 1
-        array[df_label["Cond"]==1, int(array.shape[1]/2), :, :] = 1
-        # set a volume of (5, 5, 5) of the lower corner of every sample to 1
-        array[df_label["Cond"]==1, 0:5, 0:5, 0:5] = 1
 
     # flatten the array into a 2d array (keep the sample dimension)
     array_2d = array.reshape(array.shape[0], -1)
@@ -62,7 +49,7 @@ def get_best_features_sorted(array, df_label, feature_list_values_=False, proof_
     
     # calculate the difference between the two cumulative histograms including 
     # a resampling (done with the range argument) so that the two histograms have the same bins
-    print("Calculation for list of best features ...")
+    print("Calculating list of best features ...")
     cum_diff_dict = {}
     for col in tqdm.tqdm(df_small.columns[:-1]):  # -1 because the last column is the ground truth
         cum_diff = np.abs(np.cumsum(np.histogram(df_small.loc[df_label["Cond"]==1 , col],
