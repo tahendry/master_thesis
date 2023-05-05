@@ -23,8 +23,12 @@ from functions.function_NIfTY_to_array import nifty_to_array
 # parameters to define
 proof_of_correctness = True
 list_of_components = [1]
-resample_cube_list = [1]
-number_of_feature_list = [5*5*5*2]
+resample_cube_list = [5]
+number_of_feature_list = [2]
+
+if resample_cube_list[0] == 5:
+    padding = [(2, 2), (0, 1), (2, 2)]
+    shape_resampeled_array = (19, 22, 19)
 
 ##############################################
 
@@ -38,7 +42,7 @@ print(f"shape of component_array_5d: {component_array_5d.shape}")
 
 # create empty dataframe to store results
 try:
-    result_df = pd.read_csv("./results/h2o_results_proof.csv")
+    result_df = pd.read_csv("./results/results_proof.csv")
 except:
     result_df = pd.DataFrame()
 
@@ -62,9 +66,20 @@ for reshape_cube in resample_cube_list:
         sample_array_4d = resample_4d_array(component_array_5d[indx], reshape_cube)
         print(f"shape of resampled sample_array_4d: {sample_array_4d.shape}")
 
+        if proof_of_correctness:
+            # change the values of the array to zeros
+            array = np.zeros(sample_array_4d.shape)
+
+            # For the samples which received the treatment (df_label["Cond"] = 1):
+            # change the middle plane of every sample to 1
+            # array[df_label["Cond"]==1, int(array.shape[1]/2), :, :] = 1
+            # set a volume of (5, 5, 5) of the lower corner of every sample to 1
+            array[df_label["Cond"]==1, 0, 0, 0] = 1
+            sample_array_4d = array
+
         # get the sorted feature list
         best_feature_list = get_best_features_sorted(
-            sample_array_4d, df_label, proof_of_correctness_arg=proof_of_correctness
+            sample_array_4d, df_label
         )
 
         # loop through the number of features
@@ -74,8 +89,8 @@ for reshape_cube in resample_cube_list:
             best_features = best_feature_list[:number_of_features]
 
             # print the positions of the features on to the MVPA data
-            marker = get_feature_positions(best_features, [(0, 0), (0, 0), (0, 0)], 1, (91, 109, 91))
-            plot_3d_array_colored(sample_array_4d[0], marker)
+            marker = get_feature_positions(best_features, padding, resample_cube_list[0], shape_resampeled_array)
+            plot_3d_array_colored(component_array_5d[0][0], marker)
 
             # print the positions of the features onto the anatomical data
             anatomic_array = nifty_to_array("anatomic_scan_T1.nii")
@@ -88,7 +103,7 @@ for reshape_cube in resample_cube_list:
             result_df = pd.concat([result_df, single_result_df], axis=0)
 
             # save the result_df to csv
-            result_df.to_csv("./results/h2o_results_proof.csv", index=False)
+            result_df.to_csv("./results/results_proof.csv", index=False)
 
     # stop h2o server
     h2o.shutdown(prompt=False)
