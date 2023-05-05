@@ -9,7 +9,9 @@ import matplotlib.pyplot as plt
 
 def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0):
     """
-    Plot a 3D array with matplotlib.
+    Plot a 3D array with matplotlib. The voxels which have a value of 0 are transparent.
+    The voxels which have a value > 0 are colored according to their value.
+    The voxels witch are marked via the marked_indices argument, have a red edge.
 
 
     Parameters
