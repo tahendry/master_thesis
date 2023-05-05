@@ -9,6 +9,9 @@ import numpy as np
 def get_feature_positions(top_features, padding, resample_cube, shape_resampled_array):
     """
     Get the positions of the features in the original array.
+    -> original array = array before padding and resampling.
+    so in the example of the MVPA data, the original array is a 3d array
+    with the shape of (91, 109, 91).
 
     Parameters
     ----------
@@ -20,6 +23,7 @@ def get_feature_positions(top_features, padding, resample_cube, shape_resampled_
         i.e. [(2, 2), (0, 1), (2, 2)]
     resample_cube : integer
         The size of the resample cube.
+        i.e. 5
     shape_resampled_array : tuple
         A tuple containing the shape of the resampled array.
         i.e. (19, 22, 19)
@@ -27,7 +31,8 @@ def get_feature_positions(top_features, padding, resample_cube, shape_resampled_
     Returns
     -------
     feature_positions : list
-        A list of tuples (3d indices) containing the positions of the features in the original array.
+        A list of tuples (3d indices) containing the positions 
+        of the features in the original array.
 
     """
 
