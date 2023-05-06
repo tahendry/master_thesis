@@ -11,3 +11,4 @@ h2o*/
 pycaret*/
 __pycache__/
 NIfTY_feature_masks/
+.vscode/
