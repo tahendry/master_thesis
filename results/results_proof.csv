@@ -1,0 +1,5 @@
+id,component,resample_cube,number_of_features,CV_Accuracy_(Training),CV_Std_(Training),Accuracy_(Test),F1_Score_(Test),Precision_Score_(Test)
+h2o_20230505_125550,1,5,2,1.0,0.0,1.0,1.0,1.0
+h2o_20230505_140133,1,5,419,1.0,0.0,1.0,1.0,1.0
+h2o_20230506_115125,1,2,2531,1.0,0.0,1.0,1.0,1.0
+h2o_20230506_124116,1,7,209,1.0,0.0,1.0,1.0,1.0
