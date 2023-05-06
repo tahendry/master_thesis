@@ -13,20 +13,20 @@ intent_code     : none
 datatype        : uint8
 bitpix          : 8
 slice_start     : 0
-pixdim          : [-1.  2.  2.  2.  1.  1.  1.  1.]
+pixdim          : [-1.  2.  2.  2.  0.  0.  0.  0.]
 vox_offset      : 0.0
 scl_slope       : nan
 scl_inter       : nan
 slice_end       : 0
 slice_code      : unknown
-xyzt_units      : 0
+xyzt_units      : 2
 cal_max         : 0.0
 cal_min         : 0.0
 slice_duration  : 0.0
 toffset         : 0.0
 glmax           : 0
 glmin           : 0
-descrip         : b''
+descrip         : b'Mask of most important voxels for classification'
 aux_file        : b''
 qform_code      : unknown
 sform_code      : aligned
