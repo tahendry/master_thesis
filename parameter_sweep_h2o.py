@@ -2,6 +2,17 @@
 Date: 09.04.2023
 Author: Reto Hendry
 
+This scripts allows to run a parameter sweep on the MVPA data using the autoML tool h2o.
+The results are stored in results_param_sweep_h2o.csv.
+
+The following parameters need to be defined:
+- list_of_components (list of integers)
+    the integer represents the component of the MVPA data which should be used
+- resample_cube_list (list of integers)
+    the integer represents the size of the cube which is used to resample the MVPA data
+- number_of_feature_list (list of integers)
+    the integer represents the number of (best) features which should be used for the classification
+
 """
 
 import numpy as np
@@ -20,8 +31,8 @@ from functions.function_run_h2o import run_h2o
 
 # parameters to define
 list_of_components = [1]
-resample_cube_list = [1, 2, 3, 4, 5]
-number_of_feature_list = [410, 430, 450]
+resample_cube_list = np.arange(1, 16, 1, dtype=int)
+number_of_feature_list = np.arange(10, 411, 10, dtype=int)
 
 ##############################################
 
@@ -35,7 +46,7 @@ print(f"shape of component_array_5d: {component_array_5d.shape}")
 
 # create empty dataframe to store results
 try:
-    result_df = pd.read_csv("./results/h2o_results_df.csv")
+    result_df = pd.read_csv("./results/results_param_sweep_h2o.csv")
 except:
     result_df = pd.DataFrame()
 
@@ -77,11 +88,8 @@ for reshape_cube in resample_cube_list:
             result_df = pd.concat([result_df, single_result_df], axis=0)
 
             # save the result_df to csv
-            result_df.to_csv("./results/h2o_results_df.csv", index=False)
+            result_df.to_csv("./results/results_param_sweep_h2o.csv", index=False)
 
     # stop h2o server
     h2o.shutdown(prompt=False)
     time.sleep(60)
-
-# show the result_df
-result_df

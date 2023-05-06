@@ -2,6 +2,17 @@
 Date: 09.04.2023
 Author: Reto Hendry
 
+This scripts allows to run a parameter sweep on the MVPA data using the autoML tool tpot.
+The results are stored in results_param_sweep_tpot.csv.
+
+The following parameters need to be defined:
+- list_of_components (list of integers)
+    the integer represents the component of the MVPA data which should be used
+- resample_cube_list (list of integers)
+    the integer represents the size of the cube which is used to resample the MVPA data
+- number_of_feature_list (list of integers)
+    the integer represents the number of (best) features which should be used for the classification
+
 """
 
 import numpy as np
@@ -17,11 +28,9 @@ from functions.function_run_tpot import run_tpot
 ##############################################
 
 # parameters to define
-list_of_components = [1, 1]
-resample_cube_list = np.arange(2, 10, 1)
-number_of_feature_list = np.arange(10, 101, 10, dtype=int)
-# number_of_feature_list = [100, 110]
-
+list_of_components = [1]
+resample_cube_list = np.arange(1, 16, 1, dtype=int)
+number_of_feature_list = np.arange(10, 411, 10, dtype=int)
 
 ##############################################
 
@@ -35,7 +44,7 @@ print(f"shape of component_array_5d: {component_array_5d.shape}")
 
 # create empty dataframe to store results
 try:
-    result_df = pd.read_csv("./results/tpot_results_df.csv")
+    result_df = pd.read_csv("./results/results_param_sweep_tpot.csv")
 except:
     result_df = pd.DataFrame()
 
@@ -66,7 +75,4 @@ for reshape_cube in resample_cube_list:
             result_df = pd.concat([result_df, single_result_df], axis=0)
 
             # save the result_df to csv
-            result_df.to_csv("./results/tpot_results_df.csv", index=False)
-
-# show the result_df
-result_df
+            result_df.to_csv("./results/results_param_sweep_tpot.csv", index=False)
