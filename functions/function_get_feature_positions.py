@@ -33,6 +33,8 @@ def get_feature_positions(top_features, padding, resample_cube, shape_resampled_
     feature_positions : list
         A list of tuples (3d indices) containing the positions 
         of the features in the original array.
+    original_marker_array_shape : tuple
+        The shape of the original array before padding.
 
     """
 
@@ -89,10 +91,12 @@ def get_feature_positions(top_features, padding, resample_cube, shape_resampled_
 
     # Reverse the padding operation
     original_marker_array = unpad_array(expanded_marker_array, padding)
+    original_marker_array_shape = original_marker_array.shape
+
 
     # Find the indices of the important elements in the 3d array
     marker = np.argwhere(original_marker_array == True)
 
     print("done with get_feature_positions")
 
-    return marker
+    return marker, original_marker_array_shape
