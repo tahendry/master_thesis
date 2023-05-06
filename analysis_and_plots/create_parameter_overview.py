@@ -2,6 +2,14 @@
 Date: 09.04.2023
 Author: Reto Hendry
 
+This script is to create a parameter overview dataframe containing the following parameters of the parameter sweep:
+- component (int)
+- reshape_cube (int)
+- padding (list of 3 tuples)
+- number_of_features (int)
+- shape_resampled_array (tuple -> (sample, x, y, z))
+- best_features (list)
+
 """
 
 import numpy as np
@@ -20,7 +28,7 @@ from functions.function_resample_4d_array import resample_4d_array
 # parameters to define
 list_of_components = [1]
 resample_cube_list = np.arange(1, 16, 1)
-number_of_feature_list = np.arange(10, 211, 10, dtype=int)
+number_of_feature_list = np.arange(10, 511, 10, dtype=int)
 
 ##############################################
 
@@ -63,7 +71,7 @@ except:
                 df_temp = pd.DataFrame(
                     {
                         "component": [component],
-                        "reshape_cube": [reshape_cube],
+                        "resample_cube": [reshape_cube],
                         "padding": [padding],
                         "number_of_features": [number_of_features],
                         "shape_resampled_array": [sample_array_4d.shape],
@@ -76,8 +84,3 @@ except:
 
     # save the feature_list_df
     feature_list_df.to_csv("./results/parameter_overview_df.csv", index=False)
-
-feature_list_df
-
-
-
