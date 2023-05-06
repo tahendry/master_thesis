@@ -23,7 +23,7 @@ def nifty_to_array(file_path_from_data):
 
     """
 
-    file_path = "../data/"
+    file_path = "./example_data/"
 
     brain_vol = nib.load(os.path.join(file_path, file_path_from_data))
 
