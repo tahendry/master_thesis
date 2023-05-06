@@ -6,9 +6,7 @@
 *.keras
 
 # ignore all folders starting with tpot
-tpot*/
-h2o*/
-pycaret*/
 __pycache__/
 NIfTY_feature_masks/
 .vscode/
+param_sweep_best_models*/
