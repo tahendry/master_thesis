@@ -30,6 +30,8 @@ def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0):
 
     """
 
+    print("creating 3D plot...")
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     
