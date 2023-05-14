@@ -32,9 +32,9 @@ from functions.function_export_feature_positions import export_feature_positions
 
 # parameters to define
 list_of_components = [1]
-resample_cube_list = [7]
-plots_3d = False
-run_autoML = True
+resample_cube_list = [1]
+plots_3d = True
+run_autoML = False
 
 ##############################################
 
@@ -53,7 +53,7 @@ except:
     result_df = pd.DataFrame()
 
 # loop through different cube sizes
-for reshape_cube in resample_cube_list:
+for resample_cube in resample_cube_list:
 
     if run_autoML:
         # start h2o server
@@ -70,7 +70,7 @@ for reshape_cube in resample_cube_list:
     # loop through the components
     for indx, component in enumerate(list_of_components):
 
-        sample_array_4d, padding = resample_4d_array(component_array_5d[indx], reshape_cube, return_padded_array=True)
+        sample_array_4d, padding = resample_4d_array(component_array_5d[indx], resample_cube, return_padded_array=True)
         print(f"shape of resampled sample_array_4d: {sample_array_4d.shape}")
 
         # change the values of the array to zeros
@@ -99,18 +99,18 @@ for reshape_cube in resample_cube_list:
             # print the positions of the features on to the MVPA data
             marker, marker_array_shape = get_feature_positions(best_features, padding, resample_cube_list[0], sample_array_4d_for_proof[0].shape)
             if plots_3d:
-                plot_3d_array_colored(component_array_5d[0][0])
-                plot_3d_array_colored(component_array_5d[0][0], marker)
+                plot_3d_array_colored(component_array_5d[0][0], plot_name=f"./figures/proof_of_corr_rc{resample_cube}")
+                plot_3d_array_colored(component_array_5d[0][0], marker, plot_name=f"./figures/proof_of_corr_rc{resample_cube}_marker")
 
             # print the positions of the features onto the anatomical data
-            anatomic_array = nifty_to_array("anatomic_scan_T1.nii")
+            anatomical_array = nifty_to_array("anatomical_scan_T1.nii")
             if plots_3d:
-                plot_3d_array_colored(anatomic_array, marker)
+                plot_3d_array_colored(anatomical_array, marker, plot_name=f"./figures/proof_of_corr_rc{resample_cube}_anatomical_marker")
 
             if run_autoML:
                 # run h2o on the best features
                 single_result_df = run_h2o(
-                    sample_array_4d_for_proof, df_label, best_features, component, reshape_cube
+                    sample_array_4d_for_proof, df_label, best_features, component, resample_cube
                 )
                 result_df = pd.concat([result_df, single_result_df], axis=0)
 
@@ -121,7 +121,7 @@ for reshape_cube in resample_cube_list:
             export_feature_positions(array_shape=marker_array_shape, 
                                      marker=marker,
                                      output_path="./NIfTY_feature_masks",
-                                     output_filename=f"proof_mask_c{component}_rc{reshape_cube}_nof{number_of_features}")
+                                     output_filename=f"proof_mask_c{component}_rc{resample_cube}_nof{number_of_features}")
 
     if run_autoML:
         # stop h2o server
