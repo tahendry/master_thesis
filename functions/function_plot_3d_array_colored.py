@@ -7,7 +7,7 @@ Author: Reto Hendry
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0):
+def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0, plot_name=None):
     """
     Plot a 3D array with matplotlib. The voxels which have a value of 0 are transparent.
     The voxels which have a value > 0 are colored according to their value.
@@ -23,6 +23,8 @@ def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0):
     linewidth_voxel : int, optional
         The linewidth of the voxels which are not marked, by default 0.
         It helps to see the edges of the reversed resampled array.
+    plot_name : str, optional
+        The name of the plot (no file extension) including the path, by default None.
 
     Return
     ------
@@ -63,11 +65,17 @@ def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0):
     ax.set_ylabel('Y axis')
     ax.set_zlabel('Z axis')
 
+    # adjust the view
     ax.view_init(elev=25, azim=-110)
     
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
-    fig.colorbar(sm, ax=ax, shrink=0.8)
+    cbar = fig.colorbar(sm, ax=ax, shrink=0.8, aspect=30)
+    cbar.set_label("value [-]", rotation=90, labelpad=-50)
     plt.tight_layout()
+
+    # save the plot if a name is given
+    if plot_name is not None:
+        plt.savefig(f"{plot_name}.eps", format="eps")
 
     plt.show()
