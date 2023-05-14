@@ -13,6 +13,9 @@ The following parameters need to be defined:
 - number_of_feature_list (list of integers)
     the integer represents the number of (best) features which should be used for the classification
 
+Note: occasionally tpot gets stuck while evaluating the pipeline. The progress bar does not move anymore.
+In this case, press ctrl+c to stop the evaluation and continue with the next pipeline.
+
 """
 
 import numpy as np
@@ -49,12 +52,12 @@ except:
     result_df = pd.DataFrame()
 
 # loop through different cube sizes
-for reshape_cube in resample_cube_list:
+for resample_cube in resample_cube_list:
 
     # loop through the components
     for indx, component in enumerate(list_of_components):
 
-        sample_array_4d = resample_4d_array(component_array_5d[indx], reshape_cube)
+        sample_array_4d = resample_4d_array(component_array_5d[indx], resample_cube)
         print(f"shape of resampled sample_array_4d: {sample_array_4d.shape}")
 
         # get the sorted feature list
@@ -70,7 +73,7 @@ for reshape_cube in resample_cube_list:
 
             # run tpot on the best features
             single_result_df = run_tpot(
-                sample_array_4d, df_label, best_features, component, reshape_cube
+                sample_array_4d, df_label, best_features, component, resample_cube
             )
             result_df = pd.concat([result_df, single_result_df], axis=0)
 

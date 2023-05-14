@@ -51,7 +51,7 @@ except:
     result_df = pd.DataFrame()
 
 # loop through different cube sizes
-for reshape_cube in resample_cube_list:
+for resample_cube in resample_cube_list:
 
     # start h2o server
     # It was noticed that if the server is not restarted from time to time,
@@ -67,7 +67,7 @@ for reshape_cube in resample_cube_list:
     # loop through the components
     for indx, component in enumerate(list_of_components):
 
-        sample_array_4d = resample_4d_array(component_array_5d[indx], reshape_cube)
+        sample_array_4d = resample_4d_array(component_array_5d[indx], resample_cube)
         print(f"shape of resampled sample_array_4d: {sample_array_4d.shape}")
 
         # get the sorted feature list
@@ -83,7 +83,7 @@ for reshape_cube in resample_cube_list:
 
             # run h2o on the best features
             single_result_df = run_h2o(
-                sample_array_4d, df_label, best_features, component, reshape_cube
+                sample_array_4d, df_label, best_features, component, resample_cube
             )
             result_df = pd.concat([result_df, single_result_df], axis=0)
 
