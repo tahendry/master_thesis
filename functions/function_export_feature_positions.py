@@ -33,6 +33,12 @@ def export_feature_positions(array_shape, marker, output_path, output_filename):
 
     """
 
+    # Load the original NIfTI file (only the header and affine matrix)
+    file_path = "./example_data/"
+    original_img = nib.load(os.path.join(file_path, "anatomical_scan_T1.nii"))
+    original_header = original_img.header.copy()
+    original_affine = original_img.affine
+
     # Replace this with your 3D numpy array
     black_image = np.zeros((91, 109, 91), dtype=np.uint8)
 
@@ -43,20 +49,20 @@ def export_feature_positions(array_shape, marker, output_path, output_filename):
     for idx in marker:
         black_image[tuple(idx)] = 255
 
-    affine_matrix = np.array([
-        [-2,  0,  0, 90],
-        [ 0,  2,  0, -126],
-        [ 0,  0,  2, -72],
-        [ 0,  0,  0, 1]
-    ])
+    # this would be the affine matrix of the original image
+    # affine_matrix = np.array([
+    #     [-2,  0,  0, 90],
+    #     [ 0,  2,  0, -126],
+    #     [ 0,  0,  2, -72],
+    #     [ 0,  0,  0, 1]
+    # ])
 
-    nifti_img = nib.Nifti1Image(black_image, affine_matrix)
+    # Create a new NIfTI image with the same affine matrix as the original
+    nifti_img = nib.Nifti1Image(black_image, original_affine, header=original_header)
 
-    # Set the header attributes to match the provided header
+    # Modify only the necessary attribute in the header
     header = nifti_img.header
-    header.set_xyzt_units(xyz='mm', t='unknown')
-    header.set_data_dtype(np.uint8)
-    header['pixdim'] = np.array([-1, 2, 2, 2, 0, 0, 0, 0], dtype=np.float32)
+    nifti_img.header.set_data_dtype(np.uint8)
     header['scl_slope'] = 0
     header['scl_inter'] = 0
     header['descrip'] = b'Mask of most important voxels for classification'
