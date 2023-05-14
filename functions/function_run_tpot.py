@@ -88,7 +88,7 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, resample_cube):
 
     # Save best model
     id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    tpot.export(f"./tpot_best_models/tpot_pipeline_{id}.py")
+    tpot.export(f"./param_sweep_best_model/tpot_best_models/tpot_pipeline_{id}.py")
 
     # Perform cross-validation on the training set
     """

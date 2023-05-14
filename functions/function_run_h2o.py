@@ -92,7 +92,7 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube):
     id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     h2o.save_model(
         model=best_model, 
-        path=f"./h2o_best_models/h2o_model_{id}",
+        path=f"./param_sweep_best_model/h2o_best_models/h2o_model_{id}",
         force=True,  # overwrite existing model
     )
 

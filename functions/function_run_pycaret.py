@@ -81,7 +81,7 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, resample_cub
 
     # Save best model
     id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    save_model(tuned_model, f"pycaret_best_models/pycaret_{id}")
+    save_model(tuned_model, f"./param_sweep_best_model/pycaret_best_models/pycaret_{id}")
     """
     sometimes, the model tuned, is still not better than the best model
     in this case, the best model is saved, respectively the tuned model
