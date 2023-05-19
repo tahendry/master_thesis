@@ -31,8 +31,8 @@ from functions.function_run_h2o import run_h2o
 
 # parameters to define
 list_of_components = [1]
-resample_cube_list = np.arange(1, 16, 1, dtype=int)
-number_of_feature_list = np.arange(10, 411, 10, dtype=int)
+resample_cube_list = np.arange(2, 5, 1, dtype=int)
+number_of_feature_list = np.arange(30, 111, 20, dtype=int)
 
 ##############################################
 
