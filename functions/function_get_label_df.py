@@ -8,14 +8,17 @@ import os
 import pandas as pd
 
 
-def get_label_df():
+def get_label_df(data_path_optional=None):
     """
     Read in the excel-file with the labels and 
     return a dataframe with the labels.
 
     Parameters
     ----------
-    None
+    data_path_optional : string, optional
+        Path to the data folder. The default is None.
+        This is only used when the function is called from
+        a script inside a folder other than the main folder.
 
     Returns
     -------
@@ -25,8 +28,13 @@ def get_label_df():
         Sham (placebo) = 0, Verum = 1
 
     """
+
     # read in the excel-file with the labels
-    data_path = "../data/"
+    if data_path_optional:
+        data_path = data_path_optional
+    else:
+        data_path = "../data/"
+
     label_file = "Conn_IDs_Matching_90_subjects.xlsx"
 
     # read excel with only the first three columns

@@ -8,7 +8,7 @@ import numpy as np
 import nibabel as nib
 
 
-def get_component_array(components, print_info=False):
+def get_component_array(components, print_info=False, data_path_optional=None):
     """
     Returns an arrays with the stacked components of the MVPA data.
     (component, samples, x, y, z)
@@ -19,6 +19,10 @@ def get_component_array(components, print_info=False):
         list of components to be used
     print_info : bool, optional
         print info about the array, by default False
+    data_path_optional : string, optional
+        Path to the data folder. The default is None.
+        This is only used when the function is called from
+        a script inside a folder other than the main folder.
 
     Returns
     -------
@@ -29,7 +33,10 @@ def get_component_array(components, print_info=False):
     """
 
     # read MVPA data
-    data_path = "../data/"
+    if data_path_optional:
+        data_path = data_path_optional
+    else:
+        data_path = "../data/"
     path_content = os.listdir(os.path.join(data_path, "Denoised_MVPA_8mm"))
 
     components = sorted(components)
