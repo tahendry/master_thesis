@@ -76,6 +76,6 @@ def plot_3d_array_colored(array, marked_indices=None, linewidth_voxel=0, plot_na
 
     # save the plot if a name is given
     if plot_name is not None:
-        plt.savefig(f"{plot_name}.eps", format="eps")
+        plt.savefig(f"{plot_name}.svg", format="svg", bbox_inches="tight", pad_inches=0.05)
 
     plt.show()
