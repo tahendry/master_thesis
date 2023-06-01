@@ -19,7 +19,7 @@ from pycaret.classification import (
 os.environ['PYDEVD_WARN_EVALUATION_TIMEOUT'] = '10.0'
 os.environ['PYDEVD_UNBLOCK_THREADS_TIMEOUT'] = '5.0'
 
-def run_pycaret(sample_array_4d, df_label, feature_list, component, resample_cube):
+def run_pycaret(sample_array_4d, df_label, feature_list, component, resample_cube, randomize_labels=False):
     """
     Run pycaret on the input data.
 
@@ -35,6 +35,10 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, resample_cub
         The component number
     resample_cube : int
         the size of the cube to reshape the array 5 -> 5x5x5
+    randomize_labels : bool, optional (default=False)
+        if True, the labels are mixed randomly
+        This is to check how the results change.
+
 
     Returns
     -------
@@ -42,6 +46,10 @@ def run_pycaret(sample_array_4d, df_label, feature_list, component, resample_cub
         a dataframe with the results of the best model of the pycaret run
 
     """
+    
+    if randomize_labels:
+        # shuffle the labels
+        df_label["Cond"] = np.random.permutation(df_label["Cond"].values)
 
     # Define the cross-validation strategy
     cv_stratified = StratifiedKFold(n_splits=9, shuffle=True, random_state=42)

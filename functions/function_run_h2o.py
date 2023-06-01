@@ -16,7 +16,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score
 from sklearn.base import BaseEstimator
 
 
-def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube):
+def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube, randomize_labels=False):
     """
     Run H2O AutoML on the input data.
 
@@ -32,6 +32,10 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube):
         The component number
     resample_cube : int
         the size of the cube to reshape the array 5 -> 5x5x5
+    randomize_labels : bool, optional (default=False)
+        if True, the labels are mixed randomly
+        This is to check how the results change.
+
     
     Returns
     -------
@@ -39,6 +43,10 @@ def run_h2o(sample_array_4d, df_label, feature_list, component, resample_cube):
         a dataframe with the results of the best model of the H2O AutoML run
 
     """
+    
+    if randomize_labels:
+        # shuffle the labels
+        df_label["Cond"] = np.random.permutation(df_label["Cond"].values)
 
     # reshape 4d array to dataframe
     sample_df = pd.DataFrame(

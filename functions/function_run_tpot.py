@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, f1_score, precision_score
 
 
-def run_tpot(sample_array_4d, df_label, feature_list, component, resample_cube):
+def run_tpot(sample_array_4d, df_label, feature_list, component, resample_cube, randomize_labels=False):
     """
     Run tpot on the input data.
 
@@ -31,6 +31,10 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, resample_cube):
         The component number
     resample_cube : int
         the size of the cube to reshape the array 5 -> 5x5x5
+    randomize_labels : bool, optional (default=False)
+        if True, the labels are mixed randomly
+        This is to check how the results change.
+
     
     Returns
     -------
@@ -39,6 +43,10 @@ def run_tpot(sample_array_4d, df_label, feature_list, component, resample_cube):
 
     """
     
+    if randomize_labels:
+        # shuffle the labels
+        df_label["Cond"] = np.random.permutation(df_label["Cond"].values)
+
     # Define the cross-validation strategy
     cv_stratified = StratifiedKFold(n_splits=9, shuffle=True, random_state=42)
 
