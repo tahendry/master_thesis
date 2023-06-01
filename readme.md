@@ -29,6 +29,7 @@ Each folder has its own readme.md file (work in progress) which briefly describe
 
 
 ### folders
+- **M2DCNN_Github_Code**: Code from paper *Convolutional Neural Networks for Task-evoked fMRI Data Classification* https://github.com/largeapp/M2DCNN
 - **analysis_and_plots**: Scripts for the final analysis and evaluation of the performed parameter sweeps. Also contains the analysis of the feature importance and its results.
 - **environments**: exported environments with pip (.txt) and conda (.yaml).
 - **example_data**: NIfTI files and headers of NIfTI files.
