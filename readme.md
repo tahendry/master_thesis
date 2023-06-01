@@ -28,7 +28,7 @@ Each folder has its own readme.md file (work in progress) which briefly describe
 - **proof_of_correctness**: Aims to verify that the feature selection method and autoML tools work as expected.
 
 
-### Directories
+### folders
 - **analysis_and_plots**: Scripts for the final analysis and evaluation of the performed parameter sweeps. Also contains the analysis of the feature importance and its results.
 - **environments**: exported environments with pip (.txt) and conda (.yaml).
 - **example_data**: NIfTI files and headers of NIfTI files.
