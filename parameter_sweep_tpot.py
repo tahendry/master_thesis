@@ -12,6 +12,9 @@ The following parameters need to be defined:
     the integer represents the size of the cube which is used to resample the MVPA data
 - number_of_feature_list (list of integers)
     the integer represents the number of (best) features which should be used for the classification
+- randomize_label (boolean)
+    if True, the labels are mixed randomly before the feature selection
+    This is to check how the results change when the labels are mixed randomly.
 
 Note: occasionally tpot gets stuck while evaluating the pipeline. The progress bar does not move anymore.
 In this case, press ctrl+c to stop the evaluation and continue with the next pipeline.
@@ -32,8 +35,9 @@ from functions.function_run_tpot import run_tpot
 
 # parameters to define
 list_of_components = [1]
-resample_cube_list = np.arange(2, 5, 1, dtype=int)
-number_of_feature_list = np.arange(30, 111, 20, dtype=int)
+resample_cube_list = np.arrange(1, 6, 1)
+number_of_feature_list = np.arrange(10, 411, 20)
+randomize_label = False
 
 ##############################################
 
@@ -73,7 +77,7 @@ for resample_cube in resample_cube_list:
 
             # run tpot on the best features
             single_result_df = run_tpot(
-                sample_array_4d, df_label, best_features, component, resample_cube
+                sample_array_4d, df_label, best_features, component, resample_cube, randomize_labels=randomize_label
             )
             result_df = pd.concat([result_df, single_result_df], axis=0)
 
