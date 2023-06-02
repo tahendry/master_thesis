@@ -8,12 +8,17 @@ import numpy as np
 import nibabel as nib
 import os
 
-def export_feature_positions(array_shape, marker, output_path, output_filename):
+def export_feature_positions(array_shape, marker, output_path, output_filename, feature_importance=False):
     """
     Create a NIfTI file in the same format as the anatomic_scan_T1.nii file.
-    The voxels which are marked via the marker argument and have the maximum 
-    value (white color) for the data type which was used in the original NIfTI file.
-    The voxels which are not marked, have a value of 0 (black color)
+    If feature_importance is False:
+        The voxels which are marked via the marker argument have the maximum 
+        value (white color) for the data type which was used in the original NIfTI file.
+        The voxels which are not marked, have a value of 0 (black color)
+    If feature_importance is True:
+        The voxels which are marked via the marker argument have the feature importance value
+        multiplied by 255 (white color). That means a scaled feature importance of 1 will be
+        white and a scaled feature importance of 0 will be black.
 
     Parameters
     ----------
@@ -26,6 +31,8 @@ def export_feature_positions(array_shape, marker, output_path, output_filename):
     output_path : str
         The path where the output file will be saved.
         (relative to the file which is calling this function)
+    feature_importance : list
+        List with the scaled feature importance values for each feature/bin.
 
     Return
     ------
@@ -34,7 +41,10 @@ def export_feature_positions(array_shape, marker, output_path, output_filename):
     """
 
     # Load the original NIfTI file (only the header and affine matrix)
-    file_path = "./example_data/"
+    if feature_importance:
+        file_path = "../example_data/"
+    else:
+        file_path = "./example_data/"
     original_img = nib.load(os.path.join(file_path, "anatomical_scan_T1.nii"))
     original_header = original_img.header.copy()
     original_affine = original_img.affine
@@ -45,9 +55,15 @@ def export_feature_positions(array_shape, marker, output_path, output_filename):
     # check if shape maches
     assert black_image.shape == array_shape, "shape does not match!"
 
-    # Set the indices in the marker array to white (255 for uint8)
-    for idx in marker:
-        black_image[tuple(idx)] = 255
+    if feature_importance:
+        # Set the indices in the marker array to the feature importance value
+        feature_importance = [item for item in feature_importance for _ in range(3*3*3)]
+        for k, idx in enumerate(marker):
+            black_image[tuple(idx)] = int(feature_importance[k] * 255)
+    else:
+        # Set the indices in the marker array to white (255 for uint8)
+        for idx in marker:
+            black_image[tuple(idx)] = 255
 
     # this would be the affine matrix of the original image
     # affine_matrix = np.array([
