@@ -21,14 +21,15 @@ A Linux workstation is used for the thesis, running on 64-bit Ubuntu 20.04.5 LTS
 
 
 ## Explanation of scripts/code and folders
-Each folder has its own readme.md file (work in progress) which briefly describes the usage of each file in the folder. Here is a quick overview what the content of each folder is:
+Here is a quick overview what the content of each folder is:
+
 ### Files
 - **parameter_sweep_[autoML tool].py**: This scripts allows to run a parameter sweep on the MVPA data using the autoML tool.
 - **create_mask_of_features.py**: This script creates NIfTI files which show the positions of the most important features.
 - **proof_of_correctness**: Aims to verify that the feature selection method and autoML tools work as expected.
 
 
-### folders
+### Folders
 - **M2DCNN_Github_Code**: Code from paper *Convolutional Neural Networks for Task-evoked fMRI Data Classification* https://github.com/largeapp/M2DCNN
 - **analysis_and_plots**: Scripts for the final analysis and evaluation of the performed parameter sweeps. Also contains the analysis of the feature importance and its results.
 - **environments**: exported environments with pip (.txt) and conda (.yaml).
